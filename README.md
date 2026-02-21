@@ -95,18 +95,18 @@ This skill gives your AI coding tool version-aware Swift language guidance. It c
 
 ```
 swift-6-agent-skill/
-├── SKILL.md                            # Decision tree, review checklist, quick reference, guidelines
+├── SKILL.md                  # Decision tree, review checklist, quick reference, guidelines
 └── references/
-    ├── SWIFT_6_0.md                    # Concurrency defaults, Mutex/Atomics, typed throws,
-    │                                   #   @DebugDescription, noncopyable upgrades, AsyncSequence,
-    │                                   #   RangeSet, Int128, BitwiseCopyable
-    ├── SWIFT_6_1.md                    # Trailing commas, metatype key paths, TaskGroup inference,
-    │                                   #   nonisolated types, import visibility, diagnostic groups
-    ├── SWIFT_6_2.md                    # Default MainActor isolation, raw identifiers, InlineArray
-    │                                   #   + [N of T] sugar, immediate tasks, weak let, Observations,
-    │                                   #   Span/MutableSpan, method key paths, feature adoption tooling
-    ├── SWIFT_6_2_3.md                  # Extensible enums for non-resilient modules (SE-0487)
-    └── MIGRATION.md                    # Old → new pattern mappings with before/after code examples
+    ├── SWIFT_6_0.md          # Concurrency defaults, Mutex/Atomics, typed throws,
+    │                         #   @DebugDescription, noncopyable upgrades, AsyncSequence,
+    │                         #   RangeSet, Int128, BitwiseCopyable
+    ├── SWIFT_6_1.md          # Trailing commas, metatype key paths, TaskGroup inference,
+    │                         #   nonisolated types, import visibility, diagnostic groups
+    ├── SWIFT_6_2.md          # Default MainActor isolation, raw identifiers, InlineArray
+    │                         #   + [N of T] sugar, immediate tasks, weak let, Observations,
+    │                         #   Span/MutableSpan, method key paths, feature adoption tooling
+    ├── SWIFT_6_2_3.md        # Extensible enums for non-resilient modules (SE-0487)
+    └── MIGRATION.md          # Old → new pattern mappings with before/after code examples
 ```
 
 ## Token Budget
