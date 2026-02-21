@@ -25,55 +25,15 @@ Then use the skill in your AI agent, for example:
 
 > Use the swift modern patterns skill and review this file for outdated Swift patterns and concurrency issues
 
-### Option B: Claude Code Plugin
-
-#### Personal Usage
-
-To install this Skill for your personal use in Claude Code:
-
-1. Add the marketplace:
-
-```
-/plugin marketplace add pchelnikov/swift-6-agent-skill
-```
-
-2. Install the Skill:
-
-```
-/plugin install swift-6-agent-skill@swift-6-agent-skill
-```
-
-#### Project Configuration
-
-To automatically provide this Skill to everyone working in a repository, configure the repository's `.claude/settings.json`:
-
-```json
-{
-  "enabledPlugins": {
-    "swift-6-agent-skill@swift-6-agent-skill": true
-  },
-  "extraKnownMarketplaces": {
-    "swift-6-agent-skill": {
-      "source": {
-        "source": "github",
-        "repo": "pchelnikov/swift-6-agent-skill"
-      }
-    }
-  }
-}
-```
-
-When team members open the project, Claude Code will prompt them to install the Skill.
-
-### Option C: Claude.ai
+### Option B: Claude.ai
 
 Upload the `swift-6-agent-skill/` folder as a zip file through **Settings > Features** (requires Pro, Max, Team, or Enterprise plan with code execution enabled).
 
-### Option D: Claude API
+### Option C: Claude API
 
 Upload via the `/v1/skills` endpoint and reference by `skill_id` in your API calls. See [Using Skills with the Claude API](https://platform.claude.com/docs/en/build-with-claude/skills-guide).
 
-### Option E: Manual Install
+### Option D: Manual Install
 
 1. **Clone** this repository.
 2. **Install or symlink** the `swift-6-agent-skill/` folder following your tool's official skills installation docs (see links below).
