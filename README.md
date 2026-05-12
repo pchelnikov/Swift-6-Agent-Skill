@@ -1,6 +1,6 @@
 # Swift Modern Patterns Skill
 
-Ensure your AI coding tool generates and reviews Swift code using the latest language features from Swift 6.0 through 6.2 — concurrency, typed throws, noncopyable types, observation, testing, and more.
+Ensure your AI coding tool generates and reviews Swift code using the latest language features from Swift 6.0 through 6.3 — concurrency, typed throws, noncopyable types, observation, C interoperability, testing, and more.
 
 Built on the [Agent Skills open format](https://agentskills.io/home). Every recommendation is grounded in a Swift Evolution proposal.
 
@@ -9,7 +9,7 @@ Built on the [Agent Skills open format](https://agentskills.io/home). Every reco
 - Teams migrating from Swift 5.x to Swift 6.x who need correct, version-aware guidance
 - Developers generating new Swift code and wanting modern idioms applied automatically
 - Anyone reviewing or refactoring Swift code for outdated patterns (deprecated APIs, concurrency warnings, legacy error handling)
-- Projects that need their AI agent to know what's available in Swift 6.0, 6.1, and 6.2
+- Projects that need their AI agent to know what's available in Swift 6.0, 6.1, 6.2, and 6.3
 
 ## How to Use This Skill
 
@@ -57,12 +57,14 @@ This skill gives your AI coding tool version-aware Swift language guidance. It c
 
 - Apply current concurrency patterns: default MainActor isolation (SE-0466), `Task.immediate` (SE-0472), `isolated deinit` (SE-0371)
 - Use typed throws for constrained error domains (SE-0413)
-- Use `InlineArray` for fixed-size collections (SE-0453), `weak let` for Sendable types (SE-0481)
+- Use `InlineArray` for fixed-size collections (SE-0453), `weak let` for Sendable types in Swift 6.3+ (SE-0481)
 - Apply modern syntax: trailing commas, raw identifiers, string interpolation defaults
+- Expose Swift APIs to C with `@c`, disambiguate modules with `ModuleName::`, and apply measured optimization controls where appropriate
 
 ### Review and Refactor Existing Code
 
-- Detect outdated patterns with a 16-entry old → new quick reference table
+- Detect outdated patterns with an old → new quick reference table
+- Replace underscored attributes such as `@_cdecl`, `@_specialize`, `@inline(__always)`, and `@_alwaysEmitIntoClient` with Swift 6.3 public spellings where appropriate
 - Systematically audit code with a categorized review checklist (concurrency, errors, imports, testing)
 - Triage common concurrency compiler errors with solution routing
 
@@ -103,9 +105,11 @@ swift-6-agent-skill/
     ├── SWIFT_6_1.md          # Trailing commas, metatype key paths, TaskGroup inference,
     │                         #   nonisolated types, import visibility, diagnostic groups
     ├── SWIFT_6_2.md          # Default MainActor isolation, raw identifiers, InlineArray
-    │                         #   + [N of T] sugar, immediate tasks, weak let, Observations,
+    │                         #   + [N of T] sugar, immediate tasks, Observations,
     │                         #   Span/MutableSpan, method key paths, feature adoption tooling
     ├── SWIFT_6_2_3.md        # Extensible enums for non-resilient modules (SE-0487)
+    ├── SWIFT_6_3.md          # C interop, module selectors, explicit specialization,
+    │                         #   inline/export controls, section placement, Codable errors
     └── MIGRATION.md          # Old → new pattern mappings with before/after code examples
 ```
 
@@ -117,8 +121,8 @@ The skill uses progressive disclosure to minimize context window usage:
 |------------|------|---------|
 | Metadata only | Every conversation | ~130 |
 | SKILL.md triggered | Swift task detected | ~5,000 |
-| + One reference file | Version-specific detail needed | ~6,500–8,000 |
-| All files loaded | Worst case (rare) | ~15,000 |
+| + One reference file | Version-specific detail needed | ~6,500–8,500 |
+| All files loaded | Worst case (rare) | ~18,000 |
 
 ## Sources
 
@@ -131,7 +135,7 @@ Feature coverage is based on these references:
 - [What's new in Swift 6.1](https://www.hackingwithswift.com/articles/276/whats-new-in-swift-6-1) by Paul Hudson
 - [What's new in Swift 6.2](https://www.hackingwithswift.com/articles/277/whats-new-in-swift-6-2) by Paul Hudson
 - [Swift 6.3 Released](https://www.swift.org/blog/swift-6.3-released/) — Official Swift.org blog
-- [Swift Evolution Proposals](https://github.com/swiftlang/swift-evolution) — all implemented proposals for Swift 6.0, 6.1, 6.2, and 6.2.3
+- [Swift Evolution Proposals](https://github.com/swiftlang/swift-evolution) — all implemented proposals for Swift 6.0, 6.1, 6.2, 6.2.3, and 6.3
 
 ## Contributing
 

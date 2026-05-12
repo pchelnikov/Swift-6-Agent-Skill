@@ -117,19 +117,6 @@ if let frames = try? Backtrace.capture().symbolicated()?.frames {
 }
 ```
 
-## weak let (SE-0481)
-
-Immutable weak references. Cannot be reassigned, but can be destroyed. Enables `Sendable` conformance.
-
-```swift
-final class Session: Sendable {
-    weak let user: User?       // Would not be Sendable with weak var
-    init(user: User?) { self.user = user }
-}
-```
-
-Cannot reassign: `session.user = nil` and `session.user? = User()` are compile errors.
-
 ## Transactional Observation (SE-0475)
 
 `Observations` struct provides an `AsyncSequence` of `@Observable` changes.
@@ -370,7 +357,6 @@ Migration tooling for upcoming language features. The compiler produces warnings
 - **SE-0465**: Non-escapable stdlib primitives — extends non-escapable types to standard library.
 - **SE-0468**: `AsyncStream.Continuation` conforms to `Hashable` and `Equatable`.
 - **SE-0471**: `SerialExecutor.isIsolated` for synchronous isolation checking.
-- **SE-0473**: `SuspendingClock`/`ContinuousClock` expose their start point (zero time).
 - **SE-0474**: Yielding accessors for copy-free read/write.
 - **SE-0476**: `@abi` attribute for ABI-stable library evolution without breaking changes.
 - **SE-0480**: Diagnostic group levels configurable in Swift packages via `treatWarning(_:as:)` and `treatAllWarnings(as:)` in `SwiftSetting`.

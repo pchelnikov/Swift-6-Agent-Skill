@@ -164,7 +164,7 @@ final class Session {
     weak var user: User?  // Cannot be Sendable
 }
 
-// NEW (Swift 6.2+): weak let enables Sendable (SE-0481)
+// NEW (Swift 6.3+): weak let enables Sendable (SE-0481)
 final class Session: Sendable {
     weak let user: User?  // Immutable weak — Sendable OK
 }
@@ -228,6 +228,142 @@ let caps = strings.map(\.uppercased())
 
 // NEW (Swift 6.1+): Enable MemberImportVisibility flag (SE-0444)
 // Each file must explicitly import what it uses
+```
+
+### Module Name Ambiguity
+
+```swift
+// OLD: Module names could be shadowed by declarations with the same name
+// or ambiguous when multiple modules exported matching APIs.
+let engine = RocketEngine.Engine()
+
+// NEW (Swift 6.3+): Use module selectors for explicit module lookup (SE-0491)
+let engine = RocketEngine::Engine()
+let value = ModuleA::getValue()
+```
+
+## C Interoperability
+
+### C-Callable Swift Functions
+
+```swift
+// OLD: Underscored implementation-detail attribute
+@_cdecl("MyLibrary_checksum")
+func checksum(_ bytes: UnsafePointer<UInt8>, _ count: CInt) -> UInt32 {
+    0
+}
+
+// NEW (Swift 6.3+): Public C interop attribute (SE-0495)
+@c(MyLibrary_checksum)
+func checksum(_ bytes: UnsafePointer<UInt8>, count: CInt) -> UInt32 {
+    0
+}
+```
+
+### Swift Implementation of a C Declaration
+
+```c
+// C header
+int mirror(int value);
+```
+
+```swift
+// NEW (Swift 6.3+): Swift implementation checked against the C declaration
+@c @implementation
+func mirror(_ value: CInt) -> CInt {
+    value
+}
+```
+
+## Optimization and Library Evolution
+
+### Explicit Generic Specialization
+
+```swift
+// OLD: Underscored specialization attribute
+@_specialize(where Self == [Int])
+func sumAsDouble() -> Double { ... }
+
+// NEW (Swift 6.3+): Public specialization attribute (SE-0460)
+@specialized(where Self == [Int])
+func sumAsDouble() -> Double { ... }
+```
+
+### Guaranteed Inlining
+
+```swift
+// OLD: Underscored spelling
+@inline(__always)
+func hotPathHelper(_ value: Int) -> Int { value &* 31 }
+
+// NEW (Swift 6.3+): Public spelling (SE-0496)
+@inline(always)
+func hotPathHelper(_ value: Int) -> Int { value &* 31 }
+```
+
+### Emit Into Client
+
+```swift
+// OLD: Underscored implementation visibility control
+@_alwaysEmitIntoClient
+public func helper(_ value: Int) -> Int { value &* 31 }
+
+// NEW (Swift 6.3+): Explicit definition visibility (SE-0497)
+@export(implementation)
+public func helper(_ value: Int) -> Int { value &* 31 }
+```
+
+Use these attributes only when the ABI, binary size, and performance tradeoffs
+are understood. They are primarily library-author tools.
+
+## Systems and Embedded
+
+### Linker Section Metadata
+
+```swift
+// OLD: Put section metadata in C or assembly and bridge it back to Swift.
+
+// NEW (Swift 6.3+): Emit global/static metadata directly from Swift (SE-0492)
+#if objectFormat(ELF)
+@section("plugins")
+#elseif objectFormat(MachO)
+@section("__DATA,plugins")
+#endif
+@used
+let pluginRecord: (version: Int, initializer: @convention(c) () -> Void) = (
+    version: 1,
+    initializer: { print("initialize plugin") }
+)
+```
+
+### Clock Epochs
+
+```swift
+// OLD: No standard way to access the concrete clock's zero point.
+let uptime = platformSpecificUptime()
+
+// NEW (Swift 6.3+): Use systemEpoch for concrete clocks (SE-0473)
+let clock = ContinuousClock()
+let uptime = clock.now - clock.systemEpoch
+```
+
+## Codable Diagnostics
+
+### Debugging Encoding and Decoding Failures
+
+```swift
+// OLD: Default dump was hard to read and often treated as log noise.
+print(String(reflecting: error))
+
+// NEW (Swift 6.3+): EncodingError/DecodingError have readable debug output
+// for humans (SE-0489). Do not parse this string.
+print(String(reflecting: error))
+
+// For program logic, inspect the structured error instead:
+if case let DecodingError.keyNotFound(key, context) = error {
+    print("Missing key:", key.stringValue)
+    print("Path:", context.codingPath)
+}
 ```
 
 ## Testing
