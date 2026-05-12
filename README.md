@@ -130,6 +130,7 @@ Feature coverage is based on these references:
 - [What's new in Swift 6.0](https://www.hackingwithswift.com/articles/269/whats-new-in-swift-6) by Paul Hudson
 - [What's new in Swift 6.1](https://www.hackingwithswift.com/articles/276/whats-new-in-swift-6-1) by Paul Hudson
 - [What's new in Swift 6.2](https://www.hackingwithswift.com/articles/277/whats-new-in-swift-6-2) by Paul Hudson
+- [Swift 6.3 Released](https://www.swift.org/blog/swift-6.3-released/) — Official Swift.org blog
 - [Swift Evolution Proposals](https://github.com/swiftlang/swift-evolution) — all implemented proposals for Swift 6.0, 6.1, 6.2, and 6.2.3
 
 ## Contributing
