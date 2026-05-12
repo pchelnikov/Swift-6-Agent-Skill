@@ -129,10 +129,10 @@ The skill uses progressive disclosure to minimize context window usage:
 Feature coverage is based on these references:
 
 - [Announcing Swift 6](https://www.swift.org/blog/announcing-swift-6/) — Official Swift.org blog
-- [Swift 6.1 Released](https://www.swift.org/blog/swift-6.1-released/) — Official Swift.org blog
-- [Swift 6.2 Released](https://www.swift.org/blog/swift-6.2-released/) — Official Swift.org blog
 - [What's new in Swift 6.0](https://www.hackingwithswift.com/articles/269/whats-new-in-swift-6) by Paul Hudson
+- [Swift 6.1 Released](https://www.swift.org/blog/swift-6.1-released/) — Official Swift.org blog
 - [What's new in Swift 6.1](https://www.hackingwithswift.com/articles/276/whats-new-in-swift-6-1) by Paul Hudson
+- [Swift 6.2 Released](https://www.swift.org/blog/swift-6.2-released/) — Official Swift.org blog
 - [What's new in Swift 6.2](https://www.hackingwithswift.com/articles/277/whats-new-in-swift-6-2) by Paul Hudson
 - [Swift 6.3 Released](https://www.swift.org/blog/swift-6.3-released/) — Official Swift.org blog
 - [Swift Evolution Proposals](https://github.com/swiftlang/swift-evolution) — all implemented proposals for Swift 6.0, 6.1, 6.2, 6.2.3, and 6.3
