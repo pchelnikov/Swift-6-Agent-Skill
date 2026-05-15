@@ -7,6 +7,10 @@ description: >
   warnings, or answering questions about current Swift idioms. Covers concurrency,
   typed throws, noncopyable types, observation, C interop, optimization controls,
   testing, and more.
+license: MIT
+metadata:
+  author: Michael Pchelnikov
+  version: "2.0.0"
 ---
 
 # Swift Modern Patterns (6.0–6.3)
