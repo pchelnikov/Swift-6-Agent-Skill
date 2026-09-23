@@ -1,6 +1,6 @@
 # Swift Modern Patterns Skill
 
-Ensure your AI coding tool generates and reviews Swift code using the latest language features from Swift 6.0 through 6.3 — concurrency, typed throws, noncopyable types, observation, C interoperability, testing, and more.
+Ensure your AI coding tool generates and reviews Swift code using language features from Swift 6.0 through 6.4 — concurrency, typed throws, noncopyable types, observation, C interoperability, testing, and more.
 
 Built on the [Agent Skills open format](https://agentskills.io/home). Every recommendation is grounded in a Swift Evolution proposal.
 
@@ -9,7 +9,7 @@ Built on the [Agent Skills open format](https://agentskills.io/home). Every reco
 - Teams migrating from Swift 5.x to Swift 6.x who need correct, version-aware guidance
 - Developers generating new Swift code and wanting modern idioms applied automatically
 - Anyone reviewing or refactoring Swift code for outdated patterns (deprecated APIs, concurrency warnings, legacy error handling)
-- Projects that need their AI agent to know what's available in Swift 6.0, 6.1, 6.2, and 6.3
+- Projects that need their AI agent to know what's available in Swift 6.0 through 6.4
 
 ## How to Use This Skill
 
@@ -59,6 +59,7 @@ This skill gives your AI coding tool version-aware Swift language guidance. It c
 - Use typed throws for constrained error domains (SE-0413)
 - Use `InlineArray` for fixed-size collections (SE-0453), `weak let` for Sendable types in Swift 6.3+ (SE-0481)
 - Apply modern syntax: trailing commas, raw identifiers, string interpolation defaults
+- Use Swift 6.4 async `Result(catching:)`, noncopyable continuations, async `defer`, and cancellation shields where their ownership and cleanup requirements fit
 - Expose Swift APIs to C with `@c`, disambiguate modules with `ModuleName::`, and apply measured optimization controls where appropriate
 
 ### Review and Refactor Existing Code
@@ -80,6 +81,7 @@ This skill gives your AI coding tool version-aware Swift language guidance. It c
 - Use exit tests for `precondition`/`fatalError` paths (ST-0008)
 - Use test scoping traits for concurrency-safe shared configuration (ST-0007)
 - Use raw identifiers for human-readable test names (SE-0451)
+- Use targeted XCTest and Swift Testing interoperability during migration (ST-0021, Swift 6.4)
 
 ## What Makes This Skill Different
 
@@ -110,6 +112,8 @@ swift-6-agent-skill/
     ├── SWIFT_6_2_3.md        # Extensible enums for non-resilient modules (SE-0487)
     ├── SWIFT_6_3.md          # C interop, module selectors, explicit specialization,
     │                         #   inline/export controls, section placement, Codable errors
+    ├── SWIFT_6_4.md          # All 26 implemented SE proposals: async cleanup and Result,
+    │                         #   noncopyable ownership, warning control, observation, SwiftPM
     └── MIGRATION.md          # Old → new pattern mappings with before/after code examples
 ```
 
@@ -122,7 +126,7 @@ The skill uses progressive disclosure to minimize context window usage:
 | Metadata only | Every conversation | ~130 |
 | SKILL.md triggered | Swift task detected | ~5,000 |
 | + One reference file | Version-specific detail needed | ~6,500–8,500 |
-| All files loaded | Worst case (rare) | ~18,000 |
+| All files loaded | Worst case (rare) | ~20,000 |
 
 ## Sources
 
@@ -135,7 +139,9 @@ Feature coverage is based on these references:
 - [Swift 6.2 Released](https://www.swift.org/blog/swift-6.2-released/) — Official Swift.org blog
 - [What's new in Swift 6.2](https://www.hackingwithswift.com/articles/277/whats-new-in-swift-6-2) by Paul Hudson
 - [Swift 6.3 Released](https://www.swift.org/blog/swift-6.3-released/) — Official Swift.org blog
-- [Swift Evolution Proposals](https://github.com/swiftlang/swift-evolution) — all implemented proposals for Swift 6.0, 6.1, 6.2, 6.2.3, and 6.3
+- [Swift 6.4 Released](https://www.swift.org/blog/swift-6.4-released/) — Official Swift.org blog
+- [Swift Evolution: Swift 6.4 implemented proposals](https://www.swift.org/swift-evolution/#?version=6.4) — 26 SE proposals in the dashboard's filtered list
+- [Swift Evolution Proposals](https://github.com/swiftlang/swift-evolution) — proposal text and implementation status
 
 ## Contributing
 

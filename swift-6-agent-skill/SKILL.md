@@ -2,7 +2,7 @@
 name: swift-6-agent-skill
 description: >
   Generate, review, or refactor Swift code using modern language features from
-  Swift 6.0 through 6.3. Use when writing new Swift code, reviewing existing code
+  Swift 6.0 through 6.4. Use when writing new Swift code, reviewing existing code
   for outdated patterns, migrating from Swift 5.x to 6.x, debugging concurrency
   warnings, or answering questions about current Swift idioms. Covers concurrency,
   typed throws, noncopyable types, observation, C interop, optimization controls,
@@ -10,15 +10,15 @@ description: >
 license: MIT
 metadata:
   author: Michael Pchelnikov
-  version: "2.0.0"
+  version: "2.1.0"
 ---
 
-# Swift Modern Patterns (6.0–6.3)
+# Swift Modern Patterns (6.0–6.4)
 
 ## Overview
 
 Use this skill to ensure Swift code uses current language features and avoids
-deprecated or outdated patterns. It covers Swift 6.0, 6.1, 6.2, and 6.3 with
+deprecated or outdated patterns. It covers Swift 6.0 through 6.4 with
 SE-proposal-level traceability. This skill focuses on language-level features
 and best practices without enforcing specific architectures.
 
@@ -35,6 +35,7 @@ and best practices without enforcing specific architectures.
 - Prefer `InlineArray` for fixed-size collections (SE-0453, see `references/SWIFT_6_2.md`)
 - Use `@c` for Swift APIs intentionally exposed to C (SE-0495, see `references/SWIFT_6_3.md`)
 - Use module selectors (`ModuleName::`) only to resolve real module-name ambiguity (SE-0491)
+- In Swift 6.4+, use async `Result(catching:)` when an async failure should be a value (SE-0530); see `references/SWIFT_6_4.md`
 
 ### 2) Review existing Swift code
 - Check for deprecated or outdated patterns against the [Quick Reference](#quick-reference-old--new) table below
@@ -45,6 +46,7 @@ and best practices without enforcing specific architectures.
 - Verify test code uses Swift Testing patterns, not legacy XCTest (see [Testing](#testing))
 - Replace underscored C interop and optimization attributes with Swift 6.3 public spellings where appropriate (SE-0495, SE-0460, SE-0496, SE-0497)
 - Audit `@inline(always)`, `@specialized`, and `@export` usage for measured need and ABI impact (see `references/SWIFT_6_3.md`)
+- In Swift 6.4+, review `~Sendable`, async cleanup, and ownership-sensitive collection choices using `references/SWIFT_6_4.md`
 - Run through the [Review Checklist](#review-checklist) systematically
 
 ### 3) Refactor or migrate Swift 5.x → 6.x
@@ -56,7 +58,7 @@ and best practices without enforcing specific architectures.
 - Upgrade test suites: `#expect(throws:)` return values (ST-0006), exit tests (ST-0008)
 - Replace `@_cdecl` with `@c` or `@objc` global functions when moving to Swift 6.3 (SE-0495)
 - Replace `@_specialize`, `@inline(__always)`, and `@_alwaysEmitIntoClient` with their Swift 6.3 public forms when appropriate (SE-0460, SE-0496, SE-0497)
-- For version-specific details, see `references/SWIFT_6_0.md`, `references/SWIFT_6_1.md`, `references/SWIFT_6_2.md`, `references/SWIFT_6_3.md`
+- For version-specific details, see the matching `references/SWIFT_6_*.md` file, including `references/SWIFT_6_4.md`
 
 ### 4) Debug concurrency warnings or errors
 - "Sending value of non-Sendable type..." → Check if compiler region analysis (SE-0414) resolves it; if not, see `references/SWIFT_6_0.md` for `sending` keyword (SE-0430)
@@ -64,6 +66,7 @@ and best practices without enforcing specific architectures.
 - "Global variable ... is not concurrency-safe" → Make it `let`, isolate to `@MainActor`, or use `nonisolated(unsafe)` as last resort (SE-0412, see `references/SWIFT_6_0.md`)
 - Nonisolated async running on wrong actor → In Swift 6.2+, nonisolated async inherits caller's actor (SE-0461); use `@concurrent` to opt out (see `references/SWIFT_6_2.md`)
 - Deinit cannot access actor-isolated state → Use `isolated deinit` (SE-0371, Swift 6.2+, see `references/SWIFT_6_2.md`)
+- Async cleanup must complete on scope exit → Use `await` in `defer` (SE-0493, Swift 6.4+); consider a cancellation shield (SE-0504)
 - Ambiguous module/type/member names → Use `ModuleName::Declaration` selectors in Swift 6.3+ (SE-0491, see `references/SWIFT_6_3.md`)
 - Hard-to-read Codable failures → Use debug printing for humans, but inspect `EncodingError`/`DecodingError` cases for logic (SE-0489)
 
@@ -85,6 +88,8 @@ and best practices without enforcing specific architectures.
 - **Understand nonisolated async changes.** Nonisolated async functions now run on the caller's actor by default. Use `@concurrent` to opt into the old hop-off behavior (SE-0461, Swift 6.2+).
 - **Use `isolated deinit`** for actor-isolated classes that need safe cleanup of non-Sendable state (SE-0371, Swift 6.2+).
 - **Use global-actor isolated conformances** when protocol conformance requires access to actor-isolated state, e.g., `@MainActor Equatable` (SE-0470, Swift 6.2+).
+- **Use noncopyable `Continuation` where one owner resumes exactly once** in Swift 6.4+. Keep checked continuations for callback graphs that need shared completion state (SE-0528).
+- **Use async `defer` and cancellation shields for essential cleanup** in Swift 6.4+; keep the shielded scope as small as possible (SE-0493, SE-0504).
 
 ### Error Handling
 
@@ -95,11 +100,14 @@ and best practices without enforcing specific architectures.
 
 - **Use `InlineArray`** for fixed-size collections where the count is known at compile time. Prefer `[N of T]` sugar syntax (SE-0483). Note: does not conform to `Sequence`/`Collection` — iterate via `.indices` (SE-0453, Swift 6.2+).
 - **Use `weak let`** for immutable weak references, especially in `Sendable` types where `weak var` would prevent conformance (SE-0481, Swift 6.3+).
+- **Use `~Sendable` only to state an intentional lack of sendability** on a type that would otherwise infer it (SE-0518, Swift 6.4+).
+- **Choose `UniqueArray`, `UniqueBox`, or `Iterable` when ownership requirements justify them**; ordinary copyable collections still fit ordinary data (SE-0527, SE-0517, SE-0516, Swift 6.4+).
 - **Prefer noncopyable types (`~Copyable`)** for unique-ownership semantics. `Optional` and `Result` now support noncopyable wrapped types (SE-0427, SE-0437, Swift 6.0+).
 
 ### Observation
 
 - **Use `Observations`** for programmatic observation of `@Observable` changes outside SwiftUI — replaces manual KVO or Combine-based observation (SE-0475, Swift 6.2+).
+- **Use advanced observation tracking** when synchronous, continuous, or fine-grained change delivery is required (SE-0506, Swift 6.4+).
 
 ### Debugging
 
@@ -123,6 +131,7 @@ and best practices without enforcing specific architectures.
 - **Use access-level import modifiers** — `internal import` or `private import` to prevent accidental API leakage (SE-0409, Swift 6.0+).
 - **Enable `MemberImportVisibility` flag** to require explicit imports per file (SE-0444, Swift 6.1+).
 - **Use module selectors (`ModuleName::`)** when regular qualification is shadowed or ambiguous across modules (SE-0491, Swift 6.3+).
+- **Scope `@diagnose` to the declaration that needs warning control** and use a specific diagnostic group (SE-0522, Swift 6.4+).
 
 ### Interop, ABI, and Optimization
 
@@ -140,6 +149,7 @@ and best practices without enforcing specific architectures.
 - **Use test scoping traits** for concurrency-safe shared test configuration via `TestScoping` protocol (ST-0007, Swift 6.1+).
 - **Use exit tests** — `#expect(processExitsWith: .failure)` for testing `precondition`/`fatalError` paths (ST-0008, Swift 6.2+).
 - **Use test attachments** — `Attachment.record(value, named:)` for debugging failing tests (ST-0009, Swift 6.2+).
+- **Use targeted XCTest/Swift Testing interoperability** when migrating shared test helpers (ST-0021, Swift Testing in Swift 6.4).
 
 ## Quick Reference: Old → New
 
@@ -175,6 +185,10 @@ and best practices without enforcing specific architectures.
 | `@_alwaysEmitIntoClient` | `@export(implementation)` | 6.3 | SE-0497 |
 | Ad hoc linker-section workarounds in C | `@section` + `@used` on global/static variables | 6.3 | SE-0492 |
 | Parsing Codable error string dumps | Switch on error cases; use debug description only for humans | 6.3 | SE-0489 |
+| `(some P)?` / `(any P)?` | `some P?` / `any P?` | 6.4 | SE-0521 |
+| Async `do`/`catch` solely to construct a result | `await Result { try await work() }` | 6.4 | SE-0530 |
+| Manual async cleanup after each return path | `await` in `defer`; shield essential cleanup from cancellation | 6.4 | SE-0493, SE-0504 |
+| Inferred `Sendable` on an intentionally local type | Explicit `~Sendable` on the type declaration | 6.4 | SE-0518 |
 
 ## Review Checklist
 
@@ -186,6 +200,8 @@ and best practices without enforcing specific architectures.
 - [ ] Tasks are named with `name:` parameter
 - [ ] `nonisolated async` behavior is intentional (caller-inheriting in 6.2+ vs hop-off in <6.2)
 - [ ] `isolated deinit` used where actor-isolated class accesses non-Sendable state in cleanup
+- [ ] Swift 6.4 async cleanup runs on every exit path; essential cleanup is shielded from cancellation
+- [ ] Noncopyable `Continuation` is used only when the completion path can own and consume it exactly once
 
 ### Error Handling
 - [ ] Typed throws used for internal/fixed error sets; untyped throws for public APIs
@@ -194,6 +210,7 @@ and best practices without enforcing specific architectures.
 ### Modern Patterns
 - [ ] `InlineArray` uses `[N of T]` sugar syntax where available
 - [ ] `weak let` used instead of `weak var` where immutability suffices (Swift 6.3+, enables `Sendable`)
+- [ ] `~Sendable` expresses intentional local ownership, not a workaround for unsafe sharing (Swift 6.4+)
 - [ ] `Observations` used instead of Combine/KVO for `@Observable` outside SwiftUI
 - [ ] String interpolation uses `default:` parameter for optional cross-type fallbacks
 - [ ] Trailing commas in multi-line lists
@@ -233,6 +250,7 @@ and best practices without enforcing specific architectures.
 | 6.2     | WWDC 2025   | Default MainActor isolation, raw identifiers, InlineArray + `[N of T]` sugar, immediate tasks, Observations |
 | 6.2.3   | Late 2025   | Extensible enums for non-resilient modules (SE-0487) |
 | 6.3     | Mar 2026    | `@c`, module selectors, `@specialized`, `@inline(always)`, `@export`, `@section`/`@used`, Codable debug descriptions, weak let, clock epochs |
+| 6.4     | Sep 2026    | Async `Result`, noncopyable continuations, async `defer`, cancellation shields, `~Sendable`, advanced observation, ownership-aware collections, warning control, SwiftPM SBOMs |
 
 ## References
 
@@ -241,6 +259,7 @@ and best practices without enforcing specific architectures.
 - `references/SWIFT_6_2.md` — Default MainActor isolation, raw identifiers, InlineArray + `[N of T]` sugar, immediate tasks, Observations, Span/MutableSpan, method key paths, exit tests
 - `references/SWIFT_6_2_3.md` — Extensible enums for non-resilient modules (SE-0487)
 - `references/SWIFT_6_3.md` — C interop, module selectors, explicit specialization, guaranteed inlining, definition visibility, section placement, Codable debug descriptions, weak let, clock epochs
+- `references/SWIFT_6_4.md` — All 26 implemented SE proposals, practical 6.4 guidance, and Swift Testing release additions
 - `references/MIGRATION.md` — Comprehensive old → new pattern mappings with before/after code for all versions
 
 ## Philosophy

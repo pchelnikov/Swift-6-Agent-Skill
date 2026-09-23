@@ -5,6 +5,31 @@ Use this when refactoring existing code or reviewing code that uses pre-6.0 idio
 
 ## Concurrency
 
+### Async Cleanup (Swift 6.4+)
+
+When an async function has several exit paths, put required async cleanup in
+`defer` (SE-0493). If cancellation must not interrupt that cleanup, wrap the
+smallest necessary operation in `withTaskCancellationShield` (SE-0504). See
+`SWIFT_6_4.md` for the proposal links and constraints.
+
+### Async Errors as Values (Swift 6.4+)
+
+Use `await Result { try await operation() }` when the caller needs a `Result`
+instead of a thrown error (SE-0530). Keep ordinary `try await` when the caller
+handles failure by throwing.
+
+### Callback Bridges (Swift 6.4+)
+
+For an exactly-once completion path, consider `withContinuation(of:)` and its
+noncopyable continuation (SE-0528). Keep `withCheckedContinuation` when several
+escaping callbacks need to share one completion handle.
+
+### Explicit Non-Sendability (Swift 6.4+)
+
+Mark a type `~Sendable` when its inferred conformance would misrepresent its
+intended isolation (SE-0518). This suppresses inference; it does not make
+cross-actor access safe.
+
 ### Global Actor Inference on Views
 
 ```swift
